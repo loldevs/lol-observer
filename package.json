@@ -1,0 +1,12 @@
+{
+    "name": "lol-observer",
+    "description": "client for riot games League of Legends observer system",
+    "author": "Mark Schmale <masch@masch.it>",
+    "keywords": ["parser", "client", "league of legends", "gaming"],
+    "dependencies": {
+        "co": "",
+        "debug": "",
+        "moment": "",
+        "request": ""
+    }
+}
