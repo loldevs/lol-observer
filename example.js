@@ -2,7 +2,7 @@ var Observer = require('./lib/observer.js')
   , KeyframeParser = require('./lib/parser/keyframe.js')
   , co = require('co')
 
-var euw = new Observer('euw')
+var euw = new Observer('sk')
 
 euw.getFeaturedGames(function (err, games) {
     if(err) {
@@ -14,7 +14,22 @@ euw.getFeaturedGames(function (err, games) {
         console.log(game)
     })*/
 
-    games[0]
+    for(var i=0;i<games.length;i++)
+        spectate(games[i])
+
+})
+
+/*
+euw.getGame('1265814599', 'EUW1', function(err, game) {
+    game.getMetadata()
+})
+*/
+
+
+
+function spectate(game) {
+    var first = true
+    game
         .on('keyframe.available', function(data) {
             console.log('new keyframe: ', data.id)
             var buffers = []
@@ -24,24 +39,34 @@ euw.getFeaturedGames(function (err, games) {
             })
             stream.on('end', function() {
                 var full = Buffer.concat(buffers)
-                console.log('loaded keyframe ' + data.id + ' Bytes: ' + full.length)
+                console.log('loaded keyframe ' + data.id + '#'+ game.id +' Bytes: ' + full.length)
                 KeyframeParser().parse(full, function(data) {
-                    console.log(data)
+                    console.log('time: ', data.time)
+                    /*for(var pid in data.players) {
+                        console.log("player data: %s - %s", data.players[pid].start, data.players[pid].end)
+                        console.log("player[%s]: %s", data.players[pid].entity[0], data.players[pid].name)
+                        //console.log(data.players[pid].rubish)
+                        console.log(data.players[pid].champname)
+                        console.log(data.players[pid].skills)
+                    }*/
+                    console.log('%s towers:', data.towers.length)
+                    for(var tid in data.towers) {
+                        if(data.towers[tid].itemHeader[1]) {
+                            console.log(data.towers[tid].entity[0], data.towers[tid].name)
+                            console.log(data.towers[tid].unknown)
+                            console.log(data.towers[tid].itemHeader)
+                            console.log(data.towers[tid].items)
+                        }
+                    }
                 });
             })
         })
         .on('chunk.available', function(data) {
-            console.log('new chunk: ', data.id)
+            //console.log('new chunk: ', data.id)
         })
         .on('end', function(data) {
             console.log('END')
         })
         .startSpectate()
-})
-
-/*
-euw.getGame('1265814599', 'EUW1', function(err, game) {
-    game.getMetadata()
-})
-*/
-
+    console.log('spectating game: ' + game.id + ' ' + game.region)
+}
