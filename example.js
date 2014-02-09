@@ -40,16 +40,24 @@ function spectate(game) {
             stream.on('end', function() {
                 var full = Buffer.concat(buffers)
                 console.log('loaded keyframe ' + data.id + '#'+ game.id +' Bytes: ' + full.length)
-                KeyframeParser().parse(full, function(data) {
+                try {
+                    KeyframeParser().parse(full, dump);
+                }
+                catch(e) {
+                    console.log(e)
+                }
+
+                function dump(data) {
                     console.log('time: ', data.time)
+                    console.log('%s players:', data.players.length)
                     /*for(var pid in data.players) {
                         console.log("player data: %s - %s", data.players[pid].start, data.players[pid].end)
                         console.log("player[%s]: %s", data.players[pid].entity[0], data.players[pid].name)
                         //console.log(data.players[pid].rubish)
-                        console.log(data.players[pid].champname)
-                        console.log(data.players[pid].skills)
+                        //console.log(data.players[pid].masteryPointsTotal)
+                        //console.log(data.players[pid].items)
                     }*/
-                    console.log('%s towers:', data.towers.length)
+                    /*console.log('%s towers:', data.towers.length)
                     for(var tid in data.towers) {
                         if(data.towers[tid].itemHeader[1]) {
                             console.log(data.towers[tid].entity[0], data.towers[tid].name)
@@ -57,8 +65,8 @@ function spectate(game) {
                             console.log(data.towers[tid].itemHeader)
                             console.log(data.towers[tid].items)
                         }
-                    }
-                });
+                    }*/
+                }
             })
         })
         .on('chunk.available', function(data) {
