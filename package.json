@@ -4,6 +4,7 @@
     "author": "Mark Schmale <masch@masch.it>",
     "keywords": ["parser", "client", "league of legends", "gaming"],
     "dependencies": {
+        "buffer-equal": "",
         "co": "",
         "debug": "",
         "moment": "",
